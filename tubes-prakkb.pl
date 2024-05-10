@@ -12,6 +12,7 @@ inc(buku, fiksi).
 inc(buku, nonfiksi).
 
 inc(fiksi, novel).
+inc(fiksi, komik).
 
 inc(nonfiksi, biografi).
 inc(nonfiksi, motivasi).
@@ -32,6 +33,7 @@ inc(romantis, hujan).
 inc(romantis, ayat_ayat_cinta).
 inc(romantis, architecture_of_Love).
 inc(romantis, perahu_kertas).
+inc(romantis, ada_apa_dengan_cinta).
 
 inc(drama, laskar_pelangi).
 inc(drama, '5_CM').
@@ -55,6 +57,49 @@ inc(fantasi, aroma_karsa).
 inc(fantasi, mata_di_tanah_melus).
 inc(fantasi, percy_jackson).
 inc(fantasi, the_lord_of_the_rings).
+
+inc(komik, action).
+inc(komik, mysteri).
+inc(komik, fantasy).
+inc(komik, romance).
+
+inc(action, one_piece).
+inc(action, hunter_x_hunter).
+inc(action, solo_seleving).
+inc(action, tower_of_god).
+inc(action, noblesse).
+inc(action, tokyo_revengers).
+inc(action, naruto).
+inc(action, dragon_ball).
+inc(action, bleach).
+
+inc(mysteri, detektive_conan).
+inc(mysteri, death_note).
+inc(mysteri, monster).
+inc(mysteri, '20th century boys').
+inc(mysteri, death_note).
+inc(mysteri, hyouka).
+inc(mysteri, gosick).
+inc(mysteri, another).
+
+inc(fantasy, attack_on_titan).
+inc(fantasy, fairy_tail).
+inc(fantasy, fullmetal_alchemist).
+inc(fantasy, my_hero_academia).
+inc(fantasy, the_seven_deadly_sins).
+inc(fantasy, sousou_no_frieren).
+inc(fantasy, doraemon).
+inc(fantasy, sword_art_online).
+inc(fantasy, no_game_no_life).
+
+inc(romance, your_lie_in_april).
+inc(romance, clannad).
+inc(romance, anohana).
+inc(romance, violet_evergarden).
+inc(romance, erased).
+inc(romance, orange).
+inc(romance, a_silent_voice).
+inc(romance, the_garden_of_words).
 
 inc(biografi, kisah_buya_hamka).
 inc(biografi, steve_jobs).
@@ -86,6 +131,7 @@ tergolong(X) :- golongan(_, X).
 judul_buku(X) :- jenis(X), not(tergolong(X)).
 
 genre(X, Y) :- inc(X, Y), judul_buku(Y), inc(novel, X).
+genre(X, Y) :- inc(X, Y), judul_buku(Y), inc(komik, X).
 
 buku_fiksi(X) :- judul_buku(X), genre(Y, X), inc(novel, Y).
 
@@ -103,4 +149,9 @@ cari_buku(X) :- once(judul_buku(X) -> ((buku_fiksi(X)) -> (J = fiksi), genre(G, 
                                 ,write("Tipe : "), write(T), nl)
                                 ;
                                 write("Buku Belum Terdaftar")), !. 
-                                
+
+komik(X) :- inc(fiksi, komik), inc(komik,Y), inc(Y,X).
+
+novel(X) :- inc(fiksi, novel), inc(novel,Y), inc(Y,X).
+
+
