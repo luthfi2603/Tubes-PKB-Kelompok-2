@@ -133,7 +133,14 @@ judul_buku(X) :- jenis(X), not(tergolong(X)).
 genre(X, Y) :- inc(X, Y), judul_buku(Y), inc(novel, X).
 genre(X, Y) :- inc(X, Y), judul_buku(Y), inc(komik, X).
 
-buku_fiksi(X) :- judul_buku(X), genre(Y, X), inc(novel, Y).
+:- op(600, xfx, genre).
+:- op(6001, xfx, golongan).
+
+komik(X) :- inc(fiksi, komik), inc(komik,Y), inc(Y,X).
+
+novel(X) :- inc(fiksi, novel), inc(novel,Y), inc(Y,X).
+
+buku_fiksi(X) :- judul_buku(X), komik(X) ; novel(X).
 
 buku_nonfiksi(X) :- judul_buku(X), not(buku_fiksi(X)).
 
@@ -150,9 +157,6 @@ buku_nonfiksi(X) :- judul_buku(X), not(buku_fiksi(X)).
 %                                 ;
 %                                 write("Buku Belum Terdaftar")), !. 
 
-komik(X) :- inc(fiksi, komik), inc(komik,Y), inc(Y,X).
-
-novel(X) :- inc(fiksi, novel), inc(novel,Y), inc(Y,X).
 
 cari_buku :- 
     write('Menu Pencarian Buku:'), nl,
@@ -178,10 +182,8 @@ cari_buku :-
                 (write('Buku non-fiksi'), nl)
             ),
             genre(Genre, Judul),
-            golongan(Golongan, Genre),
             write('Judul Buku : '), write(Judul), nl,
             write('Genre : '), write(Genre), nl,
-            write('Golongan : '), write(Golongan), nl
         ;
             write('Buku tidak ditemukan.')
         ).
