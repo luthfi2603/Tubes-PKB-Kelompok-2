@@ -153,7 +153,7 @@ buku_fiksi(X) :- judul_buku(X), komik(X) ; novel(X).
 
 buku_nonfiksi(X) :- judul_buku(X), not(buku_fiksi(X)).
 
-jenis_buku(X, Y) :- buku_nonfiksi(Y) -> (inc(X, Y), judul_buku(Y)) ; inc(Y1, Y), inc(X, Y1).
+golongan_buku(X, Y) :- buku_nonfiksi(Y) -> (inc(X, Y), judul_buku(Y)) ; inc(Y1, Y), inc(X, Y1).
 
 % cari_buku(X) :- once(judul_buku(X) -> ((buku_fiksi(X)) -> (J = fiksi), genre(G, X), golongan(G, T)
 %                                 ,write("Judul Buku : "), write(X), nl
@@ -175,12 +175,14 @@ cari_buku :-
     write('2. Cari buku berdasarkan genre'), nl,
     write('3. Cari buku berdasarkan jenis'), nl,
     write('4. Cari buku berdasarkan golongan'), nl,
+    write('0. Keluar'), nl,
     write('Pilihan Anda: '), read(Pilihan), nl,
     (
         Pilihan = 1 -> cari_buku_judul;
         Pilihan = 2 -> cari_buku_genre;
         Pilihan = 3 -> cari_buku_jenis;
         Pilihan = 4 -> cari_buku_golongan;
+        Pilihan = 0 -> !;
         write('Pilihan tidak valid.'), nl, nl, fail
     ).
 
@@ -191,23 +193,24 @@ cari_buku_judul :-
     (   
         judul_buku(Judul) -> (
             (buku_fiksi(Judul) -> write('Buku fiksi'), nl ; write('Buku non-fiksi'), nl),
-            genre(Genre, Judul), jenis_buku(Jenis, Judul),
+            genre(Genre, Judul), golongan_buku(Jenis, Judul),
             (write('Judul Buku : '), 
-            write(Judul), 
-            nl,
-            write('Genre : '), 
-            write(Genre), 
-            nl,
-            write('Golongan : '), 
-            write(Jenis), 
-            nl);
-            ((jenis_buku(Jenis, Judul),
-            write('Judul Buku : '), 
-            write(Judul), 
-            nl,
-            write('Golongan : '), 
-            write(Jenis),
-            nl
+                write(Judul), 
+                nl,
+                write('Genre : '), 
+                write(Genre), 
+                nl,
+                write('Golongan : '),
+                write(Jenis),
+                nl
+            );
+            ((golongan_buku(Jenis, Judul),
+                write('Judul Buku : '), 
+                write(Judul), 
+                nl,
+                write('Golongan : '), 
+                write(Jenis),
+                nl
             ))
         ); 
         write('Buku tidak ditemukan.'), nl
