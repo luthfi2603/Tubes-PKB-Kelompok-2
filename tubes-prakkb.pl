@@ -141,10 +141,6 @@ judul_buku(X) :- jenis(X), not(tergolong(X)).
 genre(X, Y) :- inc(X, Y), judul_buku(Y), inc(novel, X).
 genre(X, Y) :- inc(X, Y), judul_buku(Y), inc(komik, X).
 
-
-:- op(600, xfx, genre).
-:- op(600, xfx, golongan).
-
 komik(X) :- inc(fiksi, komik), inc(komik,Y), inc(Y,X).
 
 novel(X) :- inc(fiksi, novel), inc(novel,Y), inc(Y,X).
@@ -154,19 +150,6 @@ buku_fiksi(X) :- judul_buku(X), komik(X) ; novel(X).
 buku_nonfiksi(X) :- judul_buku(X), not(buku_fiksi(X)).
 
 golongan_buku(X, Y) :- buku_nonfiksi(Y) -> (inc(X, Y), judul_buku(Y)) ; inc(Y1, Y), inc(X, Y1).
-
-% cari_buku(X) :- once(judul_buku(X) -> ((buku_fiksi(X)) -> (J = fiksi), genre(G, X), golongan(G, T)
-%                                 ,write("Judul Buku : "), write(X), nl
-%                                 ,write("Jenis : "), write(J), nl                                
-%                                 ,write("Tipe : "), write(T), nl
-%                                 ,write("Genre : "), write(G), nl
-%                                 ;
-%                                 (J = non_fiksi), golongan(X, T)
-%                                 ,write("Judul Buku : "), write(X), nl
-%                                 ,write("Jenis : "), write(J), nl                                
-%                                 ,write("Tipe : "), write(T), nl)
-%                                 ;
-%                                 write("Buku Belum Terdaftar")), !. 
 
 cari_buku :- 
     repeat,
@@ -248,24 +231,11 @@ cari_buku_jenis :-
         write('Jenis buku tidak valid.'), nl
     ).
 
-% cari_buku_golongan :-
-%     write('Masukkan golongan buku (novel, komik, biografi, motivasi, ensiklopedia, dll): '), read(Golongan), nl,
-%     (
-%         inc(Golongan, _) -> % Memeriksa apakah golongan buku yang dimasukkan ada dalam fakta
-%         (
-%             findall(Judul, (judul_buku(Judul), golongan(Golongan, Judul)), DaftarBuku),
-%             write('Buku dalam golongan '), write(Golongan), write(': '), write(DaftarBuku), nl
-%         );
-%         (
-%             write('Golongan buku tidak ditemukan.'), nl
-%         )
-%     ).
-
 cari_buku_golongan :-
     write('Masukkan golongan buku (novel, komik, biografi, motivasi, ensiklopedia): '), read(Golongan), nl,
     (
-       Golongan = novel ->
-       (
+        Golongan = novel ->
+        (
             findall(Judul, (judul_buku(Judul), novel(Judul)), DaftarBuku),
             write('Buku dalam golongan '), write(Golongan), write(': '), write(DaftarBuku), nl
         );
