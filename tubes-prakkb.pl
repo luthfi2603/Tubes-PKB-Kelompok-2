@@ -232,16 +232,46 @@ cari_buku_jenis :-
         write('Jenis buku tidak valid.'), nl
     ).
 
+% cari_buku_golongan :-
+%     write('Masukkan golongan buku (novel, komik, biografi, motivasi, ensiklopedia, dll): '), read(Golongan), nl,
+%     (
+%         inc(Golongan, _) -> % Memeriksa apakah golongan buku yang dimasukkan ada dalam fakta
+%         (
+%             findall(Judul, (judul_buku(Judul), golongan(Golongan, Judul)), DaftarBuku),
+%             write('Buku dalam golongan '), write(Golongan), write(': '), write(DaftarBuku), nl
+%         );
+%         (
+%             write('Golongan buku tidak ditemukan.'), nl
+%         )
+%     ).
+
 cari_buku_golongan :-
-    write('Masukkan golongan buku (novel, komik, biografi, motivasi, ensiklopedia, dll): '), read(Golongan), nl,
+    write('Masukkan golongan buku (novel, komik, biografi, motivasi, ensiklopedia): '), read(Golongan), nl,
     (
-        inc(Golongan, _) -> % Memeriksa apakah golongan buku yang dimasukkan ada dalam fakta
-        (
-            findall(Judul, (judul_buku(Judul), golongan(Golongan, Judul)), DaftarBuku),
+       Golongan = novel ->
+       (
+            findall(Judul, (judul_buku(Judul), novel(Judul)), DaftarBuku),
             write('Buku dalam golongan '), write(Golongan), write(': '), write(DaftarBuku), nl
         );
+        Golongan = komik ->
         (
-            write('Golongan buku tidak ditemukan.'), nl
+            findall(Judul, (judul_buku(Judul), komik(Judul)), DaftarBuku),
+            write('Buku dalam golongan '), write(Golongan), write(': '), write(DaftarBuku), nl
+        );
+        Golongan = biografi ->
+        (
+            findall(Judul, (judul_buku(Judul), inc(biografi, Judul)), DaftarBuku),
+            write('Buku dalam golongan '), write(Golongan), write(': '), write(DaftarBuku), nl
+        );
+        Golongan = motivasi ->
+        (
+            findall(Judul, (judul_buku(Judul), inc(motivasi, Judul)), DaftarBuku),
+            write('Buku dalam golongan '), write(Golongan), write(': '), write(DaftarBuku), nl
+        );
+        Golongan = ensiklopedia ->
+        (
+            findall(Judul, (judul_buku(Judul), inc(ensiklopedia, Judul)), DaftarBuku),
+            write('Buku dalam golongan '), write(Golongan), write(': '), write(DaftarBuku), nl
         )
     ).
 
