@@ -288,7 +288,8 @@ cari_buku_golongan :-
         (
             findall(Judul, (judul_buku(Judul), inc(ensiklopedia, Judul)), DaftarBuku),
             write('Buku dalam golongan '), write(Golongan), write(': '), write(DaftarBuku), nl
-        )
+        );
+        write('Golongan tidak ditemukan.'), nl
     ).
 
 main :-
