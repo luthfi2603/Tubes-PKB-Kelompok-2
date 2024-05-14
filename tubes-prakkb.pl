@@ -58,6 +58,15 @@ inc(fantasi, mata_di_tanah_melus).
 inc(fantasi, percy_jackson).
 inc(fantasi, the_lord_of_the_rings).
 
+inc(komedi, kambing_jantan).
+inc(komedi, ngenest).
+inc(komedi, manusia_setengah_salmon).
+inc(komedi, ubur_ubur_lembur).
+
+inc(horror, holy_mother).
+inc(horror, surat_dari_kematian).
+inc(horror, pesta_bunuh_diri).
+
 inc(komik, action).
 inc(komik, mysteri).
 inc(komik, fantasy).
@@ -65,7 +74,7 @@ inc(komik, romance).
 
 inc(action, one_piece).
 inc(action, hunter_x_hunter).
-inc(action, solo_seleving).
+inc(action, solo_leveling).
 inc(action, tower_of_god).
 inc(action, noblesse).
 inc(action, tokyo_revengers).
@@ -73,11 +82,10 @@ inc(action, naruto).
 inc(action, dragon_ball).
 inc(action, bleach).
 
-inc(mysteri, detektive_conan).
+inc(mysteri, detective_conan).
 inc(mysteri, death_note).
 inc(mysteri, monster).
 inc(mysteri, '20th century boys').
-inc(mysteri, death_note).
 inc(mysteri, hyouka).
 inc(mysteri, gosick).
 inc(mysteri, another).
@@ -103,7 +111,7 @@ inc(romance, the_garden_of_words).
 
 inc(biografi, kisah_buya_hamka).
 inc(biografi, steve_jobs).
-inc(biografi, bografi_gus_dur).
+inc(biografi, biografi_gus_dur).
 inc(biografi, gelap_terang_kartini).
 inc(biografi, jack_ma).
 inc(biografi, sirah_nabawiyah).
@@ -134,7 +142,7 @@ genre(X, Y) :- inc(X, Y), judul_buku(Y), inc(novel, X).
 genre(X, Y) :- inc(X, Y), judul_buku(Y), inc(komik, X).
 
 :- op(600, xfx, genre).
-:- op(6001, xfx, golongan).
+:- op(600, xfx, golongan).
 
 komik(X) :- inc(fiksi, komik), inc(komik,Y), inc(Y,X).
 
@@ -157,8 +165,8 @@ buku_nonfiksi(X) :- judul_buku(X), not(buku_fiksi(X)).
 %                                 ;
 %                                 write("Buku Belum Terdaftar")), !. 
 
-
 cari_buku :- 
+    repeat,
     write('Menu Pencarian Buku:'), nl,
     write('1. Cari buku berdasarkan judul'), nl,
     write('2. Cari buku berdasarkan genre'), nl,
@@ -170,77 +178,78 @@ cari_buku :-
         Pilihan = 2 -> cari_buku_genre;
         Pilihan = 3 -> cari_buku_jenis;
         Pilihan = 4 -> cari_buku_golongan;
-        write('Pilihan tidak valid.')
+        write('Pilihan tidak valid.'), nl, nl, fail
     ).
 
-    cari_buku_judul :-
-        write('Masukkan judul buku: '), read(Judul), nl,
-        (
-            judul_buku(Judul) ->
-            (
-                (buku_fiksi(Judul) -> write('Buku fiksi'), nl); 
-                (write('Buku non-fiksi'), nl)
-            ),
+cari_buku_judul :-
+    write('Masukkan judul buku: '), 
+    read(Judul), 
+    nl, 
+    (   
+        judul_buku(Judul) -> (
+            (buku_fiksi(Judul) -> write('Buku fiksi'), nl ; write('Buku non-fiksi'), nl),
             genre(Genre, Judul),
-            write('Judul Buku : '), write(Judul), nl,
-            write('Genre : '), write(Genre), nl,
-        ;
-            write('Buku tidak ditemukan.')
-        ).
-    
-    cari_buku_genre :-
-        write('Masukkan genre buku: '), read(Genre), nl,
+            write('Judul Buku : '), 
+            write(Judul), 
+            nl,
+            write('Genre : '), 
+            write(Genre), 
+            nl
+        ) 
+        ; 
+        write('Buku tidak ditemukan.'), nl
+    ).
+
+cari_buku_genre :-
+    write('Masukkan genre buku: '), read(Genre), nl,
+    (
+        (inc(novel, Genre); inc(komik, Genre)) ->
         (
-            (inc(novel, Genre); inc(komik, Genre)) ->
-            (
-                write('Buku dalam genre '), write(Genre), write(':'), nl,
-                findall(Judul, (judul_buku(Judul), genre(Genre, Judul)), DaftarBuku),
-                write('Buku-buku dalam genre ini: '), write(DaftarBuku), nl
-            );
-            (
-                write('Buku tidak ditemukan.')
-            )
-        ).
-    
-    cari_buku_jenis :-
-        write('Masukkan jenis buku (fiksi/nonfiksi): '), read(Jenis), nl,
+            write('Buku dalam genre '), write(Genre), write(':'), nl,
+            findall(Judul, (judul_buku(Judul), genre(Genre, Judul)), DaftarBuku),
+            write('Buku-buku dalam genre ini: '), write(DaftarBuku), nl
+        );
         (
-            Jenis = fiksi ->
-            (
-                write('Buku fiksi yang tersedia:'), nl,
-                findall(Judul, (judul_buku(Judul), buku_fiksi(Judul)), DaftarBuku),
-                write('Buku-buku fiksi yang tersedia: '), write(DaftarBuku), nl
-            );
-            Jenis = nonfiksi ->
-            (
-                write('Buku non-fiksi yang tersedia:'), nl,
-                findall(Judul, (judul_buku(Judul), buku_nonfiksi(Judul)), DaftarBuku),
-                write('Buku-buku non-fiksi yang tersedia: '), write(DaftarBuku), nl
-            );
-            write('Jenis buku tidak valid.')
-        ).
-    
-    cari_buku_golongan :-
-        write('Masukkan golongan buku (novel, komik, biografi, motivasi, ensiklopedia, dll): '), read(Golongan), nl,
+            write('Genre buku tidak ditemukan.'), nl
+        )
+    ).
+
+cari_buku_jenis :-
+    write('Masukkan jenis buku (fiksi/nonfiksi): '), read(Jenis), nl,
+    (
+        Jenis = fiksi ->
         (
-            inc(Golongan, _) -> % Memeriksa apakah golongan buku yang dimasukkan ada dalam fakta
-            (
-                findall(Judul, (judul_buku(Judul), golongan(Golongan, Judul)), DaftarBuku),
-                write('Buku dalam golongan '), write(Golongan), write(': '), write(DaftarBuku), nl
-            );
-            (
-                write('Golongan buku tidak ditemukan.')
-            )
-        ).
-    
-    main :-
-        repeat,
-        cari_buku,
-        write('Apakah Anda ingin melanjutkan pencarian buku? (ya/tidak) '), read(Jawaban), nl,
+            write('Buku fiksi yang tersedia:'), nl,
+            findall(Judul, (judul_buku(Judul), buku_fiksi(Judul)), DaftarBuku),
+            write('Buku-buku fiksi yang tersedia: '), write(DaftarBuku), nl
+        );
+        Jenis = nonfiksi ->
         (
-            Jawaban = tidak -> !;
-            Jawaban \= ya, Jawaban \= tidak -> write('Masukan tidak valid.'), nl, fail
-        ).
-    
-    :- main.
-    
+            write('Buku non-fiksi yang tersedia:'), nl,
+            findall(Judul, (judul_buku(Judul), buku_nonfiksi(Judul)), DaftarBuku),
+            write('Buku-buku non-fiksi yang tersedia: '), write(DaftarBuku), nl
+        );
+        write('Jenis buku tidak valid.'), nl
+    ).
+
+cari_buku_golongan :-
+    write('Masukkan golongan buku (novel, komik, biografi, motivasi, ensiklopedia, dll): '), read(Golongan), nl,
+    (
+        inc(Golongan, _) -> % Memeriksa apakah golongan buku yang dimasukkan ada dalam fakta
+        (
+            findall(Judul, (judul_buku(Judul), golongan(Golongan, Judul)), DaftarBuku),
+            write('Buku dalam golongan '), write(Golongan), write(': '), write(DaftarBuku), nl
+        );
+        (
+            write('Golongan buku tidak ditemukan.'), nl
+        )
+    ).
+
+main :-
+    cari_buku,
+    nl,
+    repeat,
+    write('Apakah Anda ingin melanjutkan pencarian buku? (y/n) '), read(Jawaban), nl, (
+        Jawaban = y -> main ;
+        Jawaban = n -> ! ; Jawaban \= y, Jawaban \= n -> write('Masukan tidak valid.'), nl, nl, fail
+    ).
